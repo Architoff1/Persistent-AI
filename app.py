@@ -1,22 +1,10 @@
 from flask import Flask, render_template, request, jsonify
-
-from modules.memory_engine import (
-    store_memory,
-    retrieve_memory,
-    restore_memory
-)
-
-from modules.salience import is_salient
-if is_salient(user_msg):
-    store_memory(user_msg)
-
-from modules.prior_occurrence import (
-    prior_occurrence_check
-)
-
-from modules.reconstruction_engine import (
-    reconstruct_memory
-)
+from modules.embedding_client import get_embedding
+from modules.salience import should_store
+from modules.memory_engine import (store_memory,retrieve_memory)
+from modules.prior_occurrence import (prior_occurrence_check)
+from modules.reconstruction_engine import (reconstruct_memory)
+from modules.memory_engine import save_memory
 
 app = Flask(__name__)
 
@@ -52,41 +40,68 @@ def home():
 @app.route('/chat', methods=['POST'])
 def chat():
 
-    user_msg=request.json['message']
+    user_msg = request.json['message']
 
-    results=retrieve_memory(user_msg)
 
-    mode='direct recall'
+    # --------------------------------
+    # Prior occurrence inference
+    # --------------------------------
 
-    response=''
+    prior_event, results = prior_occurrence_check(user_msg)
+    mode='novel interaction'
+    if prior_event:
+        mode='direct recall'
 
-    if prior_occurrence_check(results):
+        response=(
+          "I remember you previously mentioned: "
+          + results[0]
+        )
 
-        if len(results)>=1:
-            response=(
-             "I found related memory traces: "
-             + results[0]
-            )
 
-        # if degraded memory case emerges
+        # Important Upgrade for later stage degraded-memory style case, its a demo we will later Not ideal. Eventually should use prior confidence + damage signal. But for demo, acceptable.
         if len(results)==1:
+
             mode='reconstruction'
+
             response=reconstruct_memory(
                 user_msg,
                 results
             )
 
-    else:
-        response='No prior event inferred.'
 
-    # store ongoing conversation too
-    store_memory(user_msg)
+    else:
+
+        response=(
+         "This seems like a new interaction. "
+         "Tell me more."
+        )
+
+
+    # --------------------------------
+    # Salience-gated storage
+    # --------------------------------
+
+    # placeholder recent embeddings for now
+    recent_embeddings = [
+        get_embedding(r)
+        for r in results
+    ] if results else []
+
+    goal_embedding=get_embedding(
+       "persistent ai research"
+    )
+
+
+    if should_store(user_msg,recent_embeddings,goal_embedding):
+        store_memory(user_msg)
+        save_memory()
+
+
 
     return jsonify({
         'reply':response,
         'mode':mode
     })
-
 
 if __name__=='__main__':
     app.run(debug=True)

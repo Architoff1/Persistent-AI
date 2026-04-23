@@ -6,3 +6,4 @@ pickle-mixin
 
 flask
 groq
+python-dotenv

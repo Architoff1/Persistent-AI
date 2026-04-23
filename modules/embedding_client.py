@@ -8,5 +8,7 @@ def get_embedding(text):
         EMBED_URL,
         json={"text": text}
     )
-
+    
+    r.raise_for_status()
+    
     return r.json()["embedding"]

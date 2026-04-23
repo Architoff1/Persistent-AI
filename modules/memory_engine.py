@@ -4,7 +4,7 @@ import pickle
 
 from config import EMBED_DIM
 from modules.embedding_client import get_embedding
-
+from modules.salience import salience_score
 
 index = faiss.IndexFlatL2(EMBED_DIM)
 

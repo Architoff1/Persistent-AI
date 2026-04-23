@@ -1,8 +1,12 @@
 # current primitive reconstruction
 # plug-point for Groq later
+import sys
+import os
+from dotenv import load_dotenv, find_dotenv
 from groq import Groq
 
-client=Groq(api_key=GROQ_API_KEY)
+load_dotenv(find_dotenv())
+client=Groq(api_key="GROQ_API_KEY")
 
 def reconstruct_memory(query,retrieved_results):
 

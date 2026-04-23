@@ -50,7 +50,7 @@ print(results)
 # Then reconstruction path activates.
 # --------------------------------
 
-if prior_occurrence_check(results):
+if prior_occurrence_check(query):
 
     hypothesis=reconstruct_memory(
         query,
