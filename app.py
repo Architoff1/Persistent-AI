@@ -6,6 +6,10 @@ from modules.memory_engine import (
     restore_memory
 )
 
+from modules.salience import is_salient
+if is_salient(user_msg):
+    store_memory(user_msg)
+
 from modules.prior_occurrence import (
     prior_occurrence_check
 )

@@ -1,9 +1,24 @@
 # minimal heuristic now
 # later can be replaced by richer probabilistic logic
 
-def prior_occurrence_check(retrieved_results):
+from modules.embedding_client import get_embedding
+from modules.memory_engine import retrieve_memory
 
-    if len(retrieved_results) > 0:
-        return True
+def prior_occurrence_check(query):
 
-    return False
+    candidates = retrieve_memory(query,k=3)
+
+    if len(candidates)==0:
+        return False,None
+
+    # very simple prototype confidence heuristic
+    # later replace with hybrid score
+
+    best=candidates[0]
+
+    confidence=0.78
+
+    if confidence > 0.70:
+        return True,candidates
+
+    return False,None

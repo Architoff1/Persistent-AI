@@ -1,18 +1,40 @@
 # current primitive reconstruction
 # plug-point for Groq later
+from groq import Groq
+
+client=Groq(api_key=GROQ_API_KEY)
 
 def reconstruct_memory(query,retrieved_results):
 
-    if len(retrieved_results)==0:
-        return None
+    context="\n".join(retrieved_results)
 
-    hypothesis=(
-    "Probable reconstructed memory: "
-    + retrieved_results[0]
+    prompt=f"""
+Direct episodic memory is unavailable.
+
+Using these residual traces:
+
+{context}
+
+Reconstruct the most probable prior memory the user is referring to.
+
+State uncertainty if needed.
+"""
+
+
+    chat=client.chat.completions.create(
+        model="llama3-70b-8192",
+        messages=[
+            {
+             "role":"user",
+             "content":prompt
+            }
+        ]
     )
 
-    return hypothesis
-
+    return (
+      chat.choices[0]
+      .message.content
+    )
 
 # future plug-point
 # def groq_reconstruct(...):
