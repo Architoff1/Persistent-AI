@@ -57,7 +57,6 @@ def delete_memory(idx):
     print("Memory deleted.")
 
 
-
 def restore_memory(text):
 
     print("Reconsolidating memory...")
@@ -68,4 +67,17 @@ def restore_memory(text):
 
 def save_memory():
 
+    faiss.write_index(
+        index,
+        "memory/faiss_index.bin"
+    )
+
+    with open(
+        "memory/memory_records.pkl",
+        "wb"
+    ) as f:
+
+        pickle.dump(
+            memory_records,
+            f
         )

@@ -34,4 +34,46 @@ store_memory(
 # --------------------------------
 # normal retrieval
 # --------------------------------
+
+query=input("Ask memory question: ")
+
+results=retrieve_memory(query)
+
+print("
+Retrieved candidates:")
+print(results)
+
+# --------------------------------
+# If you manually damage the main memory
+# before running or during demo,
+# retrieval may return degraded traces.
+# Then reconstruction path activates.
+# --------------------------------
+
+if prior_occurrence_check(results):
+
+    hypothesis=reconstruct_memory(
+        query,
+        results
     )
+
+    print("
+Reconstruction hypothesis:")
+    print(hypothesis)
+
+    confirm=input(
+    "
+Was this what you meant? (y/n): "
+    )
+
+    if confirm.lower()=="y":
+
+        restore_memory(hypothesis)
+
+        print(
+        "Memory reconsolidated."
+        )
+
+else:
+
+    print("No prior event inferred.")
