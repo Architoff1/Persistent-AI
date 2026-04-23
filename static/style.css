@@ -23,13 +23,26 @@ margin-bottom:20px;
 }
 
 .user{
-margin:12px;
 text-align:right;
+}
+
+.user b{
+background:#eef4ff;
+padding:10px 14px;
+border-radius:14px;
+display:inline-block;
 }
 
 .bot{
 margin:12px;
 text-align:left;
+}
+
+.bot b{
+background:#f4f4f4;
+padding:10px 14px;
+border-radius:14px;
+display:inline-block;
 }
 
 .badge{
@@ -39,6 +52,7 @@ border-radius:10px;
 font-size:12px;
 margin-top:6px;
 border:1px solid #999;
+background:#e8fff0;
 }
 
 .input-area{
