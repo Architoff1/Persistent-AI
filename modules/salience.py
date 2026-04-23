@@ -89,3 +89,16 @@ def should_store(
         )
         > SALIENCE_THRESHOLD
     )
+    
+#Important upgrade for later stage-
+"""
+Tiny optional hardening (not required tonight)
+
+For numerical safety:
+
+np.linalg.norm(a)
+
+could theoretically be zero.
+
+Could add epsilon guard someday.
+"""

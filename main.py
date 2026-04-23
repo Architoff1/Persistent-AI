@@ -39,8 +39,7 @@ query=input("Ask memory question: ")
 
 results=retrieve_memory(query)
 
-print("
-Retrieved candidates:")
+print("Retrieved candidates:")
 print(results)
 
 # --------------------------------
@@ -50,15 +49,16 @@ print(results)
 # Then reconstruction path activates.
 # --------------------------------
 
-if prior_occurrence_check(query):
+prior_event, candidates = prior_occurrence_check(query)
+
+if prior_event:
 
     hypothesis=reconstruct_memory(
         query,
         results
     )
 
-    print("
-Reconstruction hypothesis:")
+    print("Reconstruction hypothesis:")
     print(hypothesis)
 
     confirm=input(
