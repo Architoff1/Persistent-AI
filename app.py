@@ -68,10 +68,8 @@ def chat():
        "persistent ai research"
     )
 
-
-    if should_store(user_msg,recent_embeddings,goal_embedding):
-        store_memory(user_msg)
-        save_memory()
+    store_memory(user_msg)
+    save_memory()
 
 
 

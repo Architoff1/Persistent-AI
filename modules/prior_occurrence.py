@@ -60,7 +60,7 @@ def prior_occurrence_check(query):
     confidence=(0.7*max(similarities)+0.3*np.mean(similarities))
     dynamic_threshold=(np.mean(similarities)+0.3*np.std(similarities))
     
-    if (confidence > dynamic_threshold and confidence > 0.78):
+    if (confidence > dynamic_threshold and confidence > 0.72):
         return True,candidates
 
     return False,[]
