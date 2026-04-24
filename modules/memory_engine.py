@@ -3,6 +3,7 @@ import numpy as np
 import pickle
 
 from config import EMBED_DIM
+from modules.affect_engine import infer_affect
 from modules.embedding_client import get_embedding
 from modules.salience import salience_score
 
@@ -20,7 +21,14 @@ def store_memory(text):
 
     index.add(emb)
 
-    memory_records.append(text)
+    record={"text":text,
+        "affect":infer_affect(text),
+        "trace_pointers":[
+            "semantic",
+            "episodic"
+            ]
+            }
+    memory_records.append(record)
 
 
 
@@ -41,7 +49,7 @@ def retrieve_memory(query,k=3):
 
             if memory_records[i] != "[DELETED]":
                 results.append(
-                    memory_records[i]
+                    memory_records[i]["text"]
                 )
 
     return results

@@ -8,9 +8,9 @@ if(!msg) return;
 let chat=document.getElementById('chat-box');
 
 chat.innerHTML+=`
-<div class='user'>
-<b>You:</b> ${msg}
-</div>`;
+    <div class='user'>
+    <b>You:</b> ${msg}
+    </div>`;
 
 input.value='';
 

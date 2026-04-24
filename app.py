@@ -5,6 +5,7 @@ from modules.memory_engine import (store_memory,retrieve_memory)
 from modules.prior_occurrence import (prior_occurrence_check)
 from modules.reconstruction_engine import (reconstruct_memory)
 from modules.memory_engine import save_memory
+from modules.conversation_engine import(normal_chat)
 
 app = Flask(__name__)
 
@@ -16,18 +17,9 @@ def seed_once():
     if seeded:
         return
 
-    store_memory(
-      "User proposed trace-based memory reconstruction."
-    )
-
-    store_memory(
-      "User discussed context beyond time and identity."
-    )
-
-    store_memory(
-      "User suggested reconstructing memories from residual traces."
-    )
-
+    store_memory("User proposed trace-based memory reconstruction.")
+    store_memory("User discussed context beyond time and identity.")
+    store_memory("User suggested reconstructing memories from residual traces.")
     seeded=True
 
 
@@ -39,9 +31,7 @@ def home():
 
 @app.route('/chat', methods=['POST'])
 def chat():
-
     user_msg = request.json['message']
-
 
     # --------------------------------
     # Prior occurrence inference
@@ -52,30 +42,17 @@ def chat():
     if prior_event:
         mode='direct recall'
 
-        response=(
-          "I remember you previously mentioned: "
-          + results[0]
-        )
+        response=("I remember you previously mentioned: "+ results[0])
 
 
         # Important Upgrade for later stage degraded-memory style case, its a demo we will later Not ideal. Eventually should use prior confidence + damage signal. But for demo, acceptable.
         if len(results)==1:
-
             mode='reconstruction'
 
-            response=reconstruct_memory(
-                user_msg,
-                results
-            )
-
-
+            response=reconstruct_memory(user_msg,results)
     else:
-
-        response=(
-         "This seems like a new interaction. "
-         "Tell me more."
-        )
-
+        recent_context="\n".join(results)
+        response=normal_chat(user_msg,recent_context)
 
     # --------------------------------
     # Salience-gated storage

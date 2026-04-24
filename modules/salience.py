@@ -1,5 +1,7 @@
 from modules.embedding_client import get_embedding
 from config import SALIENCE_THRESHOLD
+from modules.affect_engine import infer_affect
+import json
 import numpy as np
 
 
@@ -63,12 +65,23 @@ def salience_score(
     # -------------------------
     # Weighted salience score
     # -------------------------
+    
+    affect=json.loads(infer_affect(text))
+    aff_intensity=max(
+        affect["fear"],
+        affect["joy"],
+        affect["sadness"],
+        affect["surprise"],
+        affect["urgency"]
+        )
+
 
     score=(
-        0.4*novelty +
-        0.4*goal_rel +
-        0.2*info_density
-    )
+        0.3*novelty +
+        0.3*goal_rel +
+        0.2*info_density +
+        0.2*aff_intensity
+        )
 
 
     return score

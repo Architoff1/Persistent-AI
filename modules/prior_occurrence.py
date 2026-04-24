@@ -1,15 +1,8 @@
 import numpy as np
-
-from config import PRIOR_EVENT_THRESHOLD
-
-from modules.embedding_client import (
-    get_embedding
-)
-
-from modules.memory_engine import (
-    retrieve_memory
-)
-
+from modules.affect_engine import infer_affect
+import json
+from modules.embedding_client import (get_embedding)
+from modules.memory_engine import (retrieve_memory)
 
 
 def cosine(a,b):
@@ -28,7 +21,7 @@ def prior_occurrence_check(query):
 
     candidates = retrieve_memory(
         query,
-        k=3
+        k=5
     )
 
 
@@ -37,6 +30,7 @@ def prior_occurrence_check(query):
 
 
     query_emb = get_embedding(query)
+    query_affect=json.loads(infer_affect(query))
 
 
     # ------------------------
@@ -46,29 +40,28 @@ def prior_occurrence_check(query):
     similarities=[]
 
     for c in candidates:
-
         c_emb=get_embedding(c)
-
-        sim=cosine(
-            query_emb,
-            c_emb
+        sim=cosine(query_emb,c_emb)
+        cand_affect=json.loads(infer_affect(c))
+        
+        emotion_overlap=(
+            query_affect["fear"]*cand_affect["fear"]+
+            query_affect["joy"]*cand_affect["joy"]+
+            query_affect["sadness"]*cand_affect["sadness"]+
+            query_affect["surprise"]*cand_affect["surprise"]+
+            query_affect["urgency"]*cand_affect["urgency"]
         )
-
-        similarities.append(sim)
+        
+        combined_score=(0.7*sim +0.3*emotion_overlap)
+        similarities.append(combined_score)
 
 
     # use strongest match as confidence
-    confidence=max(similarities)
-
-
-    # optional softer aggregate alternative:
-    # confidence=np.mean(similarities)
-
-
-    if confidence > PRIOR_EVENT_THRESHOLD:
-
+    confidence=(0.7*max(similarities)+0.3*np.mean(similarities))
+    dynamic_threshold=(np.mean(similarities)+0.3*np.std(similarities))
+    
+    if (confidence > dynamic_threshold and confidence > 0.78):
         return True,candidates
-
 
     return False,[]
     
