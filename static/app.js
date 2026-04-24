@@ -29,8 +29,24 @@ let data=await r.json();
 chat.innerHTML+=`
 <div class='bot'>
 <b>Persistent AI:</b> ${data.reply}<br>
-<span class='badge'>${data.mode}</span>
+<span class='badge ${data.mode.replace(/\s+/g,"-")}'>
+${data.mode}
+</span>
 </div>`;
 
 chat.scrollTop=chat.scrollHeight;
 }
+
+document
+.getElementById('user-input')
+.addEventListener(
+'keydown',
+function(e){
+
+if(e.key==="Enter" && !e.shiftKey){
+e.preventDefault();
+sendMessage();
+}
+
+}
+);

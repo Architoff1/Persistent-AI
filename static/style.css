@@ -11,6 +11,8 @@ background:white;
 padding:30px;
 border-radius:18px;
 box-shadow:0 2px 12px rgba(0,0,0,.08);
+border:1px solid rgba(120,120,255,.18);
+backdrop-filter:blur(10px);
 }
 
 #chat-box{
@@ -27,7 +29,11 @@ text-align:right;
 }
 
 .user b{
-background:#eef4ff;
+background:linear-gradient(
+90deg,
+#dbeafe,
+#e9d5ff
+);
 padding:10px 14px;
 border-radius:14px;
 display:inline-block;
@@ -39,7 +45,11 @@ text-align:left;
 }
 
 .bot b{
-background:#f4f4f4;
+background:linear-gradient(
+90deg,
+#eefdf2,
+#e8fff8
+);
 padding:10px 14px;
 border-radius:14px;
 display:inline-block;
@@ -67,4 +77,92 @@ padding:14px;
 
 button{
 padding:14px 24px;
+}
+
+.system-panel{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:12px;
+margin:20px 0;
+font-size:14px;
+}
+
+.system-panel div{
+background:#f4f7fb;
+padding:12px;
+border-radius:12px;
+border:1px solid #d9e2ef;
+}
+
+.novel-interaction{
+background:#eef6ff;
+border-color:#6aa6ff;
+}
+
+.latent-recall{
+background:#fff5df;
+border-color:#d8a100;
+}
+
+.direct-recall{
+background:#e8fff0;
+border-color:#32a852;
+}
+
+.reconstruction{
+background:#ffeaea;
+border-color:#cc4444;
+}
+
+h1{
+font-size:42px;
+margin-bottom:8px;
+font-weight:700;
+background:linear-gradient(
+90deg,
+#2563eb,
+#7c3aed
+);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+animation:pulseGlow 4s infinite;
+}
+
+#chat-box{
+background:#fafcff;
+}
+
+@keyframes pulseGlow{
+50%{
+opacity:.85;
+}
+}
+
+.user,
+.bot{
+animation:fadeUp .35s ease;
+}
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(14px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+.system-panel div{
+background:#f4f7fb;
+padding:12px;
+border-radius:12px;
+border:1px solid #d9e2ef;
+animation:statusPulse 5s infinite;
+}
+@keyframes statusPulse{
+50%{
+box-shadow:0 0 12px rgba(80,120,255,.12);
+}
 }

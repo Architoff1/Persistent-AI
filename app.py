@@ -6,6 +6,7 @@ from modules.prior_occurrence import (prior_occurrence_check)
 from modules.reconstruction_engine import (reconstruct_memory)
 from modules.memory_engine import save_memory
 from modules.conversation_engine import(normal_chat)
+from modules.memory_engine import (load_memory,memory_records)
 
 app = Flask(__name__)
 
@@ -16,10 +17,16 @@ def seed_once():
     global seeded
     if seeded:
         return
+    
+    load_memory()
+    if len(memory_records)>0:
+        seeded=True
+        return
 
     store_memory("User proposed trace-based memory reconstruction.")
     store_memory("User discussed context beyond time and identity.")
     store_memory("User suggested reconstructing memories from residual traces.")
+    save_memory()
     seeded=True
 
 
@@ -52,6 +59,9 @@ def chat():
             response=reconstruct_memory(user_msg,results)
     else:
         recent_context="\n".join(results)
+        if results:
+            mode="latent recall"
+
         response=normal_chat(user_msg,recent_context)
 
     # --------------------------------
@@ -68,10 +78,9 @@ def chat():
        "persistent ai research"
     )
 
-    store_memory(user_msg)
+    store_memory("USER: " + user_msg)
+    store_memory("ASSISTANT: " + response)
     save_memory()
-
-
 
     return jsonify({
         'reply':response,

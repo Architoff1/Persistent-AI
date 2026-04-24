@@ -21,11 +21,14 @@ def store_memory(text):
 
     index.add(emb)
 
-    record={"text":text,
+    record={
+        "text":text,
         "affect":infer_affect(text),
+        "role":"dialogue_memory",
         "trace_pointers":[
-            "semantic",
-            "episodic"
+            "semantic_embedding",
+            "episodic_context",
+            "affective_signature"
             ]
             }
     memory_records.append(record)
@@ -80,3 +83,15 @@ def save_memory():
         pickle.dump(memory_records,f)
     print("Saving memory...")
 
+
+def load_memory():
+    global index
+    global memory_records
+    import os
+    
+    if os.path.exists("memory/faiss_index.bin"):
+        index=faiss.read_index("memory/faiss_index.bin")
+
+    if os.path.exists("memory/memory_records.pkl"):
+        with open("memory/memory_records.pkl","rb") as f:
+            memory_records=pickle.load(f)
